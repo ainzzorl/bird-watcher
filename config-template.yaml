@@ -16,7 +16,7 @@ detection:
   # Add padding to detected objects.
   # In pixels.
   padding: 100
-  interval_seconds: 60
+  interval_seconds: 15
 
 digest:
   min_interval_seconds: 300
