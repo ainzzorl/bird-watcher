@@ -284,6 +284,7 @@ async def maybe_send_digest():
     """
     global most_recent_digest_at
     global most_recent_cluster_at
+    global label2link
 
     print("Maybe sending detections")
     if most_recent_digest_at is not None and (
@@ -312,7 +313,7 @@ async def maybe_send_digest():
                     "at": detection_time,
                     "path": row[1],
                     "detection_conf": float(row[3]),
-                    "class": row[4].title(),
+                    "class": row[4],
                     "class_conf": float(row[5]),
                 }
             )
@@ -358,7 +359,12 @@ async def maybe_send_digest():
     async with TelegramClient(
         "birds-session", config["telegram"]["api_id"], config["telegram"]["api_hash"]
     ) as tg:
-        msg = f"Prediction: {best_detection['class']}, confidence: {best_detection['class_conf']}."
+        label = best_detection["class"]
+        if label in label2link:
+            bird_msg = f"[{label.title()}]({label2link[label]})"
+        else:
+            bird_msg = label.title()
+        msg = f"{bird_msg}, confidence: {best_detection['class_conf']}."
         print(msg)
         await tg.send_file(
             config["telegram"]["destination_entity"],

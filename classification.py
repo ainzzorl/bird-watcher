@@ -561,3 +561,13 @@ label2id = {
     "YELLOW HEADED BLACKBIRD": "523",
     "ZEBRA DOVE": "524",
 }
+
+label2link = {
+    "AMERICAN DIPPER": "https://en.wikipedia.org/wiki/American_dipper",
+    "ASHY STORM PETREL": "https://en.wikipedia.org/wiki/Ashy_storm_petrel",
+    "BLACK-CAPPED CHICKADEE": "https://en.wikipedia.org/wiki/Black-capped_chickadee",
+    "BREWERS BLACKBIRD": "https://en.wikipedia.org/wiki/Brewer%27s_blackbird",
+    "GRAY CATBIRD": "https://en.wikipedia.org/wiki/Gray_catbird",
+    "NORTHERN CARDINAL": "https://en.wikipedia.org/wiki/Northern_cardinal",
+    "RUBY CROWNED KINGLET": "https://en.wikipedia.org/wiki/Ruby-crowned_kinglet",
+}
