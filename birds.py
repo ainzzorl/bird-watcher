@@ -262,7 +262,7 @@ async def main():
         await run_iteration(yolo)
 
         elapsed = time.time() - start_time
-        to_wait = 60 - elapsed # TODO: extract to config
+        to_wait = int(config['detection']['interval_seconds']) - elapsed
         if to_wait > 0:
             time.sleep(to_wait)
         index += 1
