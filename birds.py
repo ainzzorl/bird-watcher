@@ -110,58 +110,62 @@ async def run_iteration(yolo):
     print('Got detection results')
 
     # Process detections
-    # TODO: break it down a little
     for i in range(len(yolo_results)):
-        f = input_files[i]
-        result = yolo_results[i]
-        boxes = result.boxes
-        cls_names = [yolo.names[c] for c in boxes.cls.numpy()]
-        if 'bird' not in cls_names:
-            continue
+        process_detection(input_files[i], yolo_results[i], yolo)
 
-        # The image has a bird.
-        # Classify and save the results.
-        print(f'Found bird in {f}')
-
-        img = cv2.imread(os.path.join(timelapse_directory, f))
-        file_created_at = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(timelapse_directory, f))).strftime("%Y-%m-%d-%H-%M-%S")
-
-        had_bird = False
-        for i in range(len(boxes.cls)):
-            if yolo.names[boxes.cls.numpy()[i]] != 'bird':
-                continue
-            had_bird = True
-            detection_conf = boxes.conf.numpy()[i]
-            coord = boxes.xyxy.numpy()[i]
-
-            padding = int(config['detection']['padding'])
-            # TODO: handle out of bounds errors
-            x1 = int(coord[0]) - padding
-            x2 = int(coord[2]) + padding
-            y1 = int(coord[1]) - padding
-            y2 = int(coord[3]) + padding
-
-            crop_img = img[y1:y2, x1:x2]
-            cropped_path = os.path.join(detections_directory, f'{f}-detection-{i}.jpg')
-            cv2.imwrite(cropped_path, crop_img)
-
-            classification_results = classify(cropped_path)
-            print(f'Classification results: {classification_results}')
-
-            cls_str = ','.join([f'{cr[1]},{cr[2]:.4f}' for cr in classification_results])
-
-            detections_csv_file.write(f'{file_created_at},{f},{i},{detection_conf:.4f},{cls_str}\n')
-            detections_csv_file.flush()
-
-        if had_bird:
-            result.save(filename=os.path.join(detections_directory, f'{f}-boxes.jpg'))
-            cv2.imwrite(os.path.join(detections_directory, f'{f}-raw.jpg'), img)
-
+    # Delete input images
     for f in input_files:
         print(f'Deleting {f}')
         os.remove(os.path.join(timelapse_directory, f))
 
     await maybe_send_digest()
+
+def process_detection(file, detection, yolo):
+    """
+    Process one object detection
+    """
+    boxes = detection.boxes
+    cls_names = [yolo.names[c] for c in boxes.cls.numpy()]
+    if 'bird' not in cls_names:
+        return
+
+    # The image has a bird.
+    # Classify and save the results.
+    print(f'Found bird in {file}')
+
+    img = cv2.imread(os.path.join(timelapse_directory, file))
+    file_created_at = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(timelapse_directory, file))).strftime("%Y-%m-%d-%H-%M-%S")
+
+    had_bird = False
+    for i in range(len(boxes.cls)):
+        if yolo.names[boxes.cls.numpy()[i]] != 'bird':
+            continue
+        had_bird = True
+        detection_conf = boxes.conf.numpy()[i]
+        coord = boxes.xyxy.numpy()[i]
+
+        padding = int(config['detection']['padding'])
+        # TODO: handle out of bounds errors
+        x1 = int(coord[0]) - padding
+        x2 = int(coord[2]) + padding
+        y1 = int(coord[1]) - padding
+        y2 = int(coord[3]) + padding
+
+        crop_img = img[y1:y2, x1:x2]
+        cropped_path = os.path.join(detections_directory, f'{file}-detection-{i}.jpg')
+        cv2.imwrite(cropped_path, crop_img)
+
+        classification_results = classify(cropped_path)
+        print(f'Classification results: {classification_results}')
+
+        cls_str = ','.join([f'{cr[1]},{cr[2]:.4f}' for cr in classification_results])
+
+        detections_csv_file.write(f'{file_created_at},{file},{i},{detection_conf:.4f},{cls_str}\n')
+        detections_csv_file.flush()
+
+    if had_bird:
+        detection.save(filename=os.path.join(detections_directory, f'{file}-boxes.jpg'))
+        cv2.imwrite(os.path.join(detections_directory, f'{file}-raw.jpg'), img)
 
 def wait_until_enough_space(dir, max_files):
     """
