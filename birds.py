@@ -115,7 +115,7 @@ async def run_iteration(yolo):
 
     # Delete input images
     for f in input_files:
-        print(f'Deleting {f}')
+        #print(f'Deleting {f}')
         os.remove(os.path.join(timelapse_directory, f))
 
     await maybe_send_digest()
