@@ -570,6 +570,7 @@ label2link = {
     "DARK EYED JUNCO": "https://en.wikipedia.org/wiki/Dark-eyed_junco",
     "GRAY CATBIRD": "https://en.wikipedia.org/wiki/Gray_catbird",
     "GREY CUCKOOSHRIKE": "https://en.wikipedia.org/wiki/Grey_cuckooshrike",
+    "LOGGERHEAD SHRIKE": "https://en.wikipedia.org/wiki/Loggerhead_shrike",
     "NORTHERN CARDINAL": "https://en.wikipedia.org/wiki/Northern_cardinal",
     "RUBY CROWNED KINGLET": "https://en.wikipedia.org/wiki/Ruby-crowned_kinglet",
     "TIT MOUSE": "https://en.wikipedia.org/wiki/Tufted_titmouse",
