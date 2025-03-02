@@ -1,1 +1,7 @@
 frame_rate: 0.2
+
+telegram:
+  api_id: "set-me"
+  api_hash: set-me
+  # E.g. t.me/<channel>
+  destination_entity: set-me

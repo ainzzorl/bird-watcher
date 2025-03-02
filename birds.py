@@ -116,11 +116,10 @@ async def maybe_send_digest():
         if detection['detection_conf'] > max_conf:
             max_conf = detection['detection_conf']
             best_detection = detection
-    # TODO: keys to config
-    async with TelegramClient('birds-session', 'TODO', 'TODO') as tg:
+    async with TelegramClient('birds-session', config['telegram']['api_id'], config['telegram']['api_hash']) as tg:
         msg = f"Prediction: {best_detection['class']}, confidence: {best_detection['class_conf']}."
         print(msg)
-        await tg.send_file('TODO', f'{detections_directory}/{best_detection["path"]}-raw.jpg', caption=msg)
+        await tg.send_file(config['telegram']['destination_entity'], f'{detections_directory}/{best_detection["path"]}-raw.jpg', caption=msg)
         most_recent_digest_at = datetime.datetime.now()
         most_recent_cluster_at = detections[-1]['at']
 
@@ -194,7 +193,6 @@ async def run_iteration(yolo):
 
 async def main():
     global root_directory
-    global config
 
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", help="Directory for saving results and intermediate files")
