@@ -92,7 +92,7 @@ async def maybe_send_digest():
     global most_recent_cluster_at
 
     print('Maybe sending detections')
-    if most_recent_digest_at is not None and (datetime.datetime.now() - most_recent_digest_at).total_seconds() <= 60:
+    if most_recent_digest_at is not None and (datetime.datetime.now() - most_recent_digest_at).total_seconds() <= int(config['digest']['min_interval_seconds']):
         print(f'Sent digest too recently ({most_recent_digest_at}), skipping')
         return
 
@@ -102,19 +102,26 @@ async def maybe_send_digest():
 
         for row in reader:
             detection_time = datetime.datetime.strptime(row[0], "%Y-%m-%d-%H-%M-%S")
-            if (datetime.datetime.now() - detection_time).total_seconds() <= 3600:
-                if most_recent_cluster_at is None or detection_time > most_recent_cluster_at:
-                    print(f"Detection time: {detection_time}, recent cluster at: {most_recent_cluster_at}")
-                    detections.append({
-                        'at': detection_time,
-                        'path': row[1],
-                        'detection_conf': float(row[3]),
-                        'class': row[4].title(),
-                        'class_conf': float(row[5])
-                    })
+            if (datetime.datetime.now() - detection_time).total_seconds() > 600:
+                continue
+            if most_recent_cluster_at is not None and detection_time <= most_recent_cluster_at:
+                continue
+            print(f"Detection time: {detection_time}, recent cluster at: {most_recent_cluster_at}")
+            detections.append({
+                'at': detection_time,
+                'path': row[1],
+                'detection_conf': float(row[3]),
+                'class': row[4].title(),
+                'class_conf': float(row[5])
+            })
 
     if len(detections) == 0:
         print('Nothing to report')
+        return
+
+    most_recent_detection_age_seconds = (datetime.datetime.now() - detections[-1]['at']).total_seconds()
+    if most_recent_detection_age_seconds < 180:
+        print(f'Most recent detection is too recent ({most_recent_detection_age_seconds} seconds). Skipping for now')
         return
 
     detections.sort(key=lambda d: d['at'])
@@ -166,8 +173,6 @@ async def run_iteration(yolo):
         boxes = result.boxes
         cls_names = [yolo.names[c] for c in boxes.cls.numpy()]
         if 'bird' not in cls_names:
-            # TODO: maybe not here
-            await maybe_send_digest()
             continue
         print(f'Found bird in {f}')
 
@@ -208,6 +213,8 @@ async def run_iteration(yolo):
     for f in input_files:
         print(f'Deleting {f}')
         os.remove(os.path.join(timelapse_directory, f))
+
+    await maybe_send_digest()
 
 async def main():
     global root_directory
