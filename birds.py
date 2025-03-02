@@ -5,6 +5,7 @@ import asyncio
 import csv
 import cv2
 import datetime
+import math
 import os
 import signal
 import subprocess
@@ -38,7 +39,10 @@ def wait_until_enough_space(dir, max_files):
 def run_timelapse():
     global timelapse_process
     wait_until_enough_space(timelapse_directory, 1000)
-    print('Starting timelapse')
+
+    # TODO: explain
+    frames = math.ceil(60 / config['frame_rate'])
+    print(f'Starting timelapse, will capture {frames} frames at rate {config["frame_rate"]}')
 
     roi = []
     if config['roi']:
@@ -48,10 +52,11 @@ def run_timelapse():
             '--roi-width', str(config['roi']['width']),
             '--roi-height', str(config['roi']['height']),
         ]
+
     timelapse_process = subprocess.Popen(
         [
             './timelapse.py',
-            '--frames', '10',
+            '--frames', str(frames),
             '--frame-rate', str(config['frame_rate']),
             *roi,
             timelapse_directory
