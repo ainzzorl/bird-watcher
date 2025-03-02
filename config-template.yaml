@@ -11,3 +11,8 @@ telegram:
 #   height: 1000
 #   offset_x: 0
 #   offset_y: 0
+
+detection:
+  # Add padding to detected objects.
+  # In pixels.
+  padding: 100

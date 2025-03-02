@@ -182,12 +182,12 @@ async def run_iteration(yolo):
             detection_conf = boxes.conf.numpy()[i]
             coord = boxes.xyxy.numpy()[i]
 
-            # TODO: padding to config
-            # TODO: ROI to config
-            x1 = int(coord[0]) - 100
-            x2 = int(coord[2]) + 100
-            y1 = int(coord[1]) - 100
-            y2 = int(coord[3]) + 100
+            padding = int(config['detection']['padding'])
+            # TODO: handle out of bounds errors
+            x1 = int(coord[0]) - padding
+            x2 = int(coord[2]) + padding
+            y1 = int(coord[1]) - padding
+            y2 = int(coord[3]) + padding
 
             crop_img = img[y1:y2, x1:x2]
             cropped_path = os.path.join(detections_directory, f'{f}-detection-{i}.jpg')
