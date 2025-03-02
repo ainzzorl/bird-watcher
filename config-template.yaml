@@ -17,6 +17,9 @@ detection:
   # In pixels.
   padding: 100
   interval_seconds: 15
+  # Delete detection files older than this.
+  # Prevents it from growing indefinitely.
+  max_detection_file_age_hours: 72
 
 digest:
   min_interval_seconds: 300

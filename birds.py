@@ -157,8 +157,21 @@ processed_source_files = set()
 
 MAX_BATCH_SIZE = 100
 
+def delete_old_detections_files():
+    current_time = time.time()
+
+    for filename in os.listdir(detections_directory):
+        file_path = os.path.join(detections_directory, filename)
+
+        if os.path.isfile(file_path):
+            file_age = current_time - os.path.getmtime(file_path)
+            print(f'File age: {file_age}, {filename}')
+            if file_age > config['detection']['max_detection_file_age_hours'] * 3600:
+                os.remove(file_path)
+                print(f"Deleted: {file_path}")
+
 async def run_iteration(yolo):
-    wait_until_enough_space(detections_directory, 1000)
+    delete_old_detections_files()
 
     input_files = [f for f in os.listdir(timelapse_directory) if os.path.isfile(os.path.join(timelapse_directory, f)) and not f in processed_source_files]
     print(f'Num source: {len(input_files)}')
