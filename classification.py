@@ -572,4 +572,5 @@ label2link = {
     "GREY CUCKOOSHRIKE": "https://en.wikipedia.org/wiki/Grey_cuckooshrike",
     "NORTHERN CARDINAL": "https://en.wikipedia.org/wiki/Northern_cardinal",
     "RUBY CROWNED KINGLET": "https://en.wikipedia.org/wiki/Ruby-crowned_kinglet",
+    "TIT MOUSE": "https://en.wikipedia.org/wiki/Tufted_titmouse",
 }
