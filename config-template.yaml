@@ -23,3 +23,6 @@ detection:
 
 digest:
   min_interval_seconds: 300
+
+classification:
+  confidence_threshold: 0.3

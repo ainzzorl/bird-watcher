@@ -348,12 +348,19 @@ async def maybe_send_digest():
     print(f"Detections in cluster: {len(detections)}")
 
     # Pick the image with the highest detection confidence in the cluster.
+    # Exclude detections with low classification confidence.
     max_conf = 0
     best_detection = None
     for detection in detections:
+        if detection["class_conf"] < config["classification"]["confidence_threshold"]:
+            continue
         if detection["detection_conf"] > max_conf:
             max_conf = detection["detection_conf"]
             best_detection = detection
+
+    if best_detection is None:
+        print("Did not find good detections in the cluster; skipping notification")
+        return
 
     # Notify Telegram.
     async with TelegramClient(
