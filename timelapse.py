@@ -1,23 +1,16 @@
 #!/usr/bin/python3
 
+"""
+Take photos and save to disk.
+It must use the built-in Python to use picamera2.
+"""
+
 import argparse
 import os
 import sys
 import time
 
 from picamera2 import Picamera2 # type: ignore
-
-MAX_PHOTOS = 1000
-RESTART_AFTER = 1000
-
-def wait_until_enough_space(destination):
-    while True:
-        files = [f for f in os.listdir(destination) if os.path.isfile(os.path.join(destination, f))]
-        print(f'Num files: {len(files)}')
-        if len(files) < MAX_PHOTOS:
-            return
-        print(f'Too many files: {len(files)}. Waiting...')
-        time.sleep(10)
 
 def init_camera(roi):
     print('Initializing camera')
@@ -74,18 +67,9 @@ if __name__ == '__main__':
         r.release()
         print(f"Captured image {index}, {fn}")
 
-        # wait_until_enough_space(destination)
-
         elapsed = time.time() - start_time
         to_wait = frequency_seconds - elapsed
         if to_wait > 0:
             time.sleep(to_wait)
 
         index += 1
-        if index % RESTART_AFTER == 0:
-            print(f'Reinitializing camera after {index} frames')
-            picam2.stop()
-            time.sleep(1)
-            picam2.close()
-            time.sleep(1)
-            picam2 = init_camera()
