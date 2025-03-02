@@ -5,3 +5,9 @@ telegram:
   api_hash: set-me
   # E.g. t.me/<channel>
   destination_entity: set-me
+# Region of interest
+# roi:
+#   width: 1000
+#   height: 1000
+#   offset_x: 0
+#   offset_y: 0

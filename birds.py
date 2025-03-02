@@ -39,7 +39,25 @@ def run_timelapse():
     global timelapse_process
     wait_until_enough_space(timelapse_directory, 1000)
     print('Starting timelapse')
-    timelapse_process = subprocess.Popen(['./timelapse.py', '--frames', '10', '--frame-rate', str(config['frame_rate']), timelapse_directory], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    roi = []
+    if config['roi']:
+        roi = [
+            '--roi-offset-x', str(config['roi']['offset_x']),
+            '--roi-offset-y', str(config['roi']['offset_y']),
+            '--roi-width', str(config['roi']['width']),
+            '--roi-height', str(config['roi']['height']),
+        ]
+    timelapse_process = subprocess.Popen(
+        [
+            './timelapse.py',
+            '--frames', '10',
+            '--frame-rate', str(config['frame_rate']),
+            *roi,
+            timelapse_directory
+        ],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
 
     def notify_when_done():
         global timelapse_process
