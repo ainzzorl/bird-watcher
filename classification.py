@@ -8,6 +8,7 @@ id2label = {}
 preprocessor = None
 classifier = None
 
+
 def initialize_classifier():
     global preprocessor, classifier, id2label
 
@@ -15,7 +16,10 @@ def initialize_classifier():
         id2label[int(label2id[k])] = k
 
     preprocessor = EfficientNetImageProcessor.from_pretrained("google/efficientnet-b2")
-    classifier = AutoModelForImageClassification.from_pretrained("chriamue/bird-species-classifier")
+    classifier = AutoModelForImageClassification.from_pretrained(
+        "chriamue/bird-species-classifier"
+    )
+
 
 def classify(path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -28,6 +32,7 @@ def classify(path):
         probs = [v.item() for v in logits.softmax(-1)[0]]
         candidates = [(k, id2label[k], probs[k]) for k in id2label]
         return sorted(candidates, key=lambda tup: -tup[2])[:3]
+
 
 label2id = {
     "ABBOTTS BABBLER": "0",
@@ -554,5 +559,5 @@ label2id = {
     "YELLOW BREASTED CHAT": "521",
     "YELLOW CACIQUE": "522",
     "YELLOW HEADED BLACKBIRD": "523",
-    "ZEBRA DOVE": "524"
-  }
+    "ZEBRA DOVE": "524",
+}
