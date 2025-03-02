@@ -16,7 +16,7 @@ import yaml
 
 from telethon import TelegramClient
 
-from classification import initialize_classifier, classify
+from classification import initialize_classifier, classify, label2link
 from detection import initialize_detection, run_detection
 
 config = None
