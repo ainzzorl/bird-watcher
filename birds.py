@@ -125,7 +125,7 @@ async def maybe_send_digest():
         return
 
     most_recent_detection_age_seconds = (datetime.datetime.now() - detections[-1]['at']).total_seconds()
-    if most_recent_detection_age_seconds < 180:
+    if most_recent_detection_age_seconds < 60:
         print(f'Most recent detection is too recent ({most_recent_detection_age_seconds} seconds). Skipping for now')
         return
 
