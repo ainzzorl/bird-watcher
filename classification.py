@@ -567,7 +567,9 @@ label2link = {
     "ASHY STORM PETREL": "https://en.wikipedia.org/wiki/Ashy_storm_petrel",
     "BLACK-CAPPED CHICKADEE": "https://en.wikipedia.org/wiki/Black-capped_chickadee",
     "BREWERS BLACKBIRD": "https://en.wikipedia.org/wiki/Brewer%27s_blackbird",
+    "DARK EYED JUNCO": "https://en.wikipedia.org/wiki/Dark-eyed_junco",
     "GRAY CATBIRD": "https://en.wikipedia.org/wiki/Gray_catbird",
+    "GREY CUCKOOSHRIKE": "https://en.wikipedia.org/wiki/Grey_cuckooshrike",
     "NORTHERN CARDINAL": "https://en.wikipedia.org/wiki/Northern_cardinal",
     "RUBY CROWNED KINGLET": "https://en.wikipedia.org/wiki/Ruby-crowned_kinglet",
 }
